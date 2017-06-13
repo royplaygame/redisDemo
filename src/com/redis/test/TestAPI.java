@@ -1,7 +1,9 @@
 package com.redis.test;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import redis.clients.jedis.Jedis;
@@ -64,7 +66,34 @@ public class TestAPI {
 		System.out.println(jedis.smembers("orders").size());
 		jedis.srem("orders", "od0002");
 		System.out.println(jedis.smembers("orders").size());
+		//hash
+		System.out.println("----------------------------------------");
+		jedis.hset("hash", "username", "zhangsan");
+		jedis.hset("hash", "password", "123456");
+		System.out.println(jedis.hget("hash", "username"));
 		
+		Map<String,String> map=new HashMap<String,String>();
+		map.put("telphone","13311814766");
+		map.put("address","洛陽市");
+		map.put("email","abc@163.com");
+		jedis.hmset("hash2", map);
+		List<String> hashList=jedis.hmget("hash2","address","telphone","email");
+		for(String str:hashList){
+			System.out.println(str);
+		}
+		
+		
+		//zset
+		System.out.println("----------------------------------------");
+		jedis.zadd("zset01",60d,"v1");
+		jedis.zadd("zset01",70d,"v2");
+		jedis.zadd("zset01",80d,"v3");
+		jedis.zadd("zset01",90d,"v4");
+		
+		Set<String> s1 = jedis.zrange("zset01",0,-1);
+		for(Iterator<String> iterator=s1.iterator();iterator.hasNext();){
+			System.out.println(iterator.next());
+		}
 		
 	}
 }
